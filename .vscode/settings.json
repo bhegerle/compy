@@ -5,5 +5,9 @@
     "cmake.generator": "Ninja",
     "C_Cpp.default.includePath": [
         "/usr/local/include"
-    ]
+    ],
+    "C_Cpp.default.cppStandard": "c++20",
+    "files.associations": {
+        "string": "cpp"
+    }
 }

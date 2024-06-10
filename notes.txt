@@ -1,0 +1,6 @@
+llvm on windows:
+    build from command line environment with vs tools and python
+    > "C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\Tools\VsDevCmd.bat"
+
+    don't use ninja
+    > cmake -G "Visual Studio 17 2022" -A x64 -S llvm -B build 
