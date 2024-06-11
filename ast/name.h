@@ -1,5 +1,6 @@
 #pragma once
 
 namespace ast {
-class stmt {};
+class name {
+};
 } // namespace ast
