@@ -54,6 +54,7 @@ class test_lexer {
 
     auto begin() const { return tokens.begin(); }
     auto end() const { return tokens.end(); }
+    auto &operator[](size_t i) { return tokens[i]; }
 
   private:
     path p;
@@ -92,6 +93,8 @@ int main() {
 
         for (auto &t : lex)
             cout << format("{}", *t) << endl;
+
+        auto id = ident(lex[0]);
 
         return 0;
     } catch (exception &x) {
