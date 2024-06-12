@@ -14,9 +14,11 @@ add_executable(compy "main.cpp" "platform.h" "platform.cpp" )
 target_compile_features(compy PUBLIC cxx_std_20)
 
 target_precompile_headers(compy PRIVATE 
+    <filesystem>
     <format>
     <iostream>
     <string>
+    <stdexcept>
 )
 
 target_link_libraries(compy ${llvm_libs})

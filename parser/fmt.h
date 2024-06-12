@@ -1,17 +1,6 @@
 #include "token.h"
 
 namespace std {
-template <> struct std::formatter<parser::txt_loc> {
-    constexpr auto parse(const std::format_parse_context &ctx) {
-        return ctx.begin();
-    }
-
-    template <class FormatContext>
-    auto format(const parser::txt_loc &t, FormatContext &ctx) const {
-        return std::format_to(ctx.out(), "@{},{}", t.line(), t.col());
-    }
-};
-
 template <> struct formatter<parser::token_type> {
     using token_type = parser::token_type;
 
@@ -47,7 +36,7 @@ template <> struct formatter<parser::token> {
         if (!t.text().empty())
             format_to(o, "{} ", t.text());
 
-        return format_to(o, "{}", t.loc());
+        return format_to(o, "@{},{}", t.line(), t.col());
     }
 };
 } // namespace std

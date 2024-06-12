@@ -1,6 +1,7 @@
 #include "ast/ident.h"
 #include "ast/module.h"
 #include "parser/fmt.h"
+#include "parser/lexer.h"
 #include "parser/token.h"
 
 #include "platform.h"
@@ -23,6 +24,7 @@
 #include <string>
 
 using namespace parser;
+using namespace utils;
 using namespace std;
 
 using func = ast::func<string>;
@@ -42,59 +44,63 @@ struct visitor {
 
 class test_lexer {
   public:
-    test_lexer() : p("<test>"), line(1), col(1) { buffer.reserve(20000); }
-
-    void push(string_view ws) { append(ws); }
-
-    void push(string_view txt, token_type type) {
-        auto loc = txt_loc(p, line, col);
-        auto atxt = append(txt);
-        tokens.emplace_back(make_shared<token>(type, atxt, loc));
+    void push(string_view txt, token_type type = token_type::ws) {
+        buffer += txt;
+        sizes.push_back(txt.size());
+        types.push_back(type);
     }
 
-    auto begin() const { return tokens.begin(); }
-    auto end() const { return tokens.end(); }
-    auto &operator[](size_t i) { return tokens[i]; }
+    vector<token> lex() const {
+        auto f = make_shared<file_buf>(path("<test>"), buffer);
+        return lexer(f, sizes, types).lex();
+    }
 
   private:
-    path p;
     string buffer;
-    uint32_t line, col;
-    vector<shared_ptr<token>> tokens;
+    vector<uint32_t> sizes;
+    vector<token_type> types;
 
-    string_view append(string_view txt) {
-        if (buffer.size() + txt.size() > buffer.capacity())
-            throw runtime_error("test_lexer buffer capacity exceeded");
+    class lexer : public lexer_base {
+      public:
+        lexer(shared_ptr<file_buf> f, vector<uint32_t> sizes,
+              vector<token_type> types)
+            : lexer_base(f), sizes(sizes), types(types) {}
 
-        auto n = buffer.size();
-        buffer.append(txt.begin(), txt.end());
-
-        for (auto c : txt) {
-            if (c == '\n') {
-                line++;
-                col = 1;
-            } else {
-                col++;
+        vector<token> lex() {
+            auto v = vector<token>();
+            for (uint32_t i = 0; i < sizes.size(); i++) {
+                if (types[i] != token_type::ws)
+                    v.push_back(take(sizes[i], types[i]));
+                else
+                    skip(sizes[i]);
             }
+
+            return v;
         }
 
-        return string_view(buffer).substr(n, txt.size());
-    }
+      private:
+        vector<uint32_t> sizes;
+        vector<token_type> types;
+    };
 };
 
 int main() {
     try {
         platform_init();
 
-        auto lex = test_lexer();
-        lex.push(" ");
-        lex.push("x", token_type::ident);
-        lex.push(" ");
+        auto tlex = test_lexer();
+        tlex.push(" ");
+        tlex.push("x", token_type::ident);
+        tlex.push(" ");
 
-        for (auto &t : lex)
-            cout << format("{}", *t) << endl;
+        for (auto &t : tlex.lex())
+            cout << format("{}", t) << endl;
 
-        auto id = ident(lex[0]);
+        auto f = file_buf(path(), "\nabc\ndef\n\nhij");
+        cout << "1:" << f.line(1) << ":" << endl;
+        cout << "2:" << f.line(2) << ":" << endl;
+        cout << "3:" << f.line(3) << ":" << endl;
+        cout << "4:" << f.line(4) << ":"<<endl;
 
         return 0;
     } catch (exception &x) {
