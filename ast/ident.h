@@ -1,11 +1,12 @@
 #pragma once
 
+#include "expr.h"
+
 #include "../parser/token.h"
 
 namespace ast {
-class ident {
+class ident : public expr {
   public:
-    using token_ptr = std::shared_ptr<parser::token>;
-    explicit ident(token_ptr ident);
+    explicit ident(parser::token &&);
 };
 } // namespace ast

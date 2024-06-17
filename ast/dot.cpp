@@ -1,10 +1,12 @@
-#include "ident.h"
+#include "dot.h"
+
+#include "../utils/dassert.h"
 
 using namespace utils;
 using namespace parser;
 
 namespace ast {
-ident::ident(token &&ident) {
+dot::dot(token &&ident) {
     dynamic_assert(ident.type() == token_type::ident,
                    "invalid token type {} in ident", ident.type());
 }

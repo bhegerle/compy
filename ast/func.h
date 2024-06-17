@@ -1,17 +1,28 @@
 #pragma once
 
-namespace ast {
-template <typename N> class func {
-  public:
-    func(N name) : n(name) {}
+#include "block.h"
+#include "expr.h"
+#include "param.h"
+#include "type.h"
 
-    void type_params() {}
+#include <vector>
+
+namespace ast {
+class func {
+  public:
+    func(type &&return_type, parser::token &&ident, std::vector<param> &&params,
+         block &&body);
+
     void return_type() {}
-    const N &name() const { return n; }
+    const parser::token &ident() const { return id; }
+    const std::string_view &name() const { return ident().text(); }
     void params() {}
-    void statements() {}
+    block &body() {}
 
   private:
-    N n;
+    type rt;
+    parser::token id;
+    std::vector<param> p;
+    block b;
 };
 } // namespace ast

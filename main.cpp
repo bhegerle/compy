@@ -27,7 +27,7 @@ using namespace parser;
 using namespace utils;
 using namespace std;
 
-using func = ast::func<string>;
+using func = ast::func;
 using module = ast::module<func>;
 using ast::ident;
 
@@ -89,18 +89,15 @@ int main() {
         platform_init();
 
         auto tlex = test_lexer();
+        tlex.push("def", token_type::def);
         tlex.push(" ");
+        tlex.push("f", token_type::ident);
+        tlex.push("(", token_type::lparen);
         tlex.push("x", token_type::ident);
-        tlex.push(" ");
+        tlex.push(")", token_type::rparen);
 
         for (auto &t : tlex.lex())
             cout << format("{}", t) << endl;
-
-        auto f = file_buf(path(), "\nabc\ndef\n\nhij");
-        cout << "1:" << f.line(1) << ":" << endl;
-        cout << "2:" << f.line(2) << ":" << endl;
-        cout << "3:" << f.line(3) << ":" << endl;
-        cout << "4:" << f.line(4) << ":"<<endl;
 
         return 0;
     } catch (exception &x) {

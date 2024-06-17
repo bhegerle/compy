@@ -5,7 +5,9 @@
 #include <format>
 
 namespace parser {
-enum class token_type { ws, ident };
+enum class token_type { ws, ident, lparen = 0x1000, rparen, def };
+
+bool has_text(token_type t);
 
 class token {
   public:

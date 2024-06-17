@@ -1,1 +1,1 @@
-target_sources(compy PRIVATE "func.h" "ident.h" "param.h" "stmt.h" "var.h" "visitor.h"  "module.h"  "ident.cpp")
+target_sources(compy PRIVATE "func.h" "ident.h" "param.h" "stmt.h" "var.h" "visitor.h"  "module.h"  "ident.cpp" "dot.h" "expr.h" "dot.cpp" "func.cpp" "type.h" "type_name.h" "type_name.cpp" "param.cpp" "block.h")

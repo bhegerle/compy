@@ -23,6 +23,6 @@ target_precompile_headers(compy PRIVATE
 
 target_link_libraries(compy ${llvm_libs})
 
-add_subdirectory("utils")
 add_subdirectory("ast")
 add_subdirectory("parser")
+add_subdirectory("utils")
