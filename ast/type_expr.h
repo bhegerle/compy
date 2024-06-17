@@ -4,9 +4,9 @@
 #include "type.h"
 
 namespace ast {
-class type_name : public type {
+class type_expr : public type {
   public:
-    explicit type_name(expr &&expr);
+    explicit type_expr(expr &&expr);
 
   private:
     expr x;
